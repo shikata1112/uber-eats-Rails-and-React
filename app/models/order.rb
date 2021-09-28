@@ -8,7 +8,7 @@ class Order < ApplicationRecord
       line_foods.each do |line_food|
         line_food.update_attributes!(active: false, order: self)
       end
-      self.save!
+      save!
     end
   end
 end
