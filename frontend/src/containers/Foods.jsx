@@ -50,6 +50,10 @@ const ItemWrapper = styled.div`
   margin: 16px;
 `;
 
+const submitOrder = () => {
+  console.log("登録ボタンが押された！");
+};
+
 export const Foods = (props) => {
   const restaurantsId = props.match.params.restaurantsId;
 
@@ -118,12 +122,28 @@ export const Foods = (props) => {
 
       {state.isOpenOrderDialog && (
         <FoodOrderDialog
-          food={state.selectedFood}
           isOpen={state.isOpenOrderDialog}
+          food={state.selectedFood}
+          countNumber={state.selectedFoodCount}
+          onClickCountUp={() =>
+            setState({
+              ...state,
+              selectedFoodCount: state.selectedFoodCount + 1,
+            })
+          }
+          onClickCountDown={() =>
+            setState({
+              ...state,
+              selectedFoodCount: state.selectedFoodCount - 1,
+            })
+          }
+          onClickOrder={() => submitOrder()}
           onClose={() =>
             setState({
               ...state,
               isOpenOrderDialog: false,
+              selectedFood: null, // この処理いらんかも
+              selectedFoodCount: 1,
             })
           }
         />
