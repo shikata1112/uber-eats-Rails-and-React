@@ -1,8 +1,6 @@
 module Api
   module V1
     class LineFoodsController < ApplicationController
-      before_action :set_food, only: [:create, :replace]
-
       def index
         line_foods = LineFood.active
         if line_foods.exists?
@@ -27,10 +25,8 @@ module Api
 
         set_line_food(ordered_food)
 
-        binding.irb
-
-        if line_food.save
-          render json: { line_food: line_food }, status: :created
+        if @line_food.save
+          render json: { line_food: @line_food }, status: :created
         else
           render json: {}, status: :internal_server_error
         end
@@ -43,8 +39,8 @@ module Api
 
         set_line_food(ordered_food)
 
-        if line_food.save
-          render json: { line_food: line_food }, status: :created
+        if @line_food.save
+          render json: { line_food: @line_food }, status: :created
         else
           render json: {}, status: :internal_server_error
         end
@@ -52,16 +48,16 @@ module Api
 
       private
 
-      def set_food
-        ordered_food = Food.find(params[:food_id])
+      def ordered_food
+        Food.find(params[:food_id])
       end
 
       def set_line_food(ordered_food)
         food = ordered_food.line_food
-        line_food = if food.present?
+        @line_food = if food.present?
                       food.attributes = { count: food.count + params[:count], active: true }
                     else
-                      food.build(count: params[:count], restaurant: ordered_food.restaurant, active: true)
+                      ordered_food.build_line_food(count: params[:count], restaurant: ordered_food.restaurant, active: true)
                     end
       end
     end
